@@ -8,7 +8,7 @@ int cnt = 0;
 
 void move(int n, char from, char to) {
     cnt++;
-    v.push_back(make_pair(from, to));
+    v.push_back(make_pair(from, to));//
 }
 
 void hanoi(int n, char from, char temp, char to) {
