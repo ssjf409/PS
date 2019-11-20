@@ -3,35 +3,44 @@
 
 using namespace std;
 
-int Count_common_divider(int N) {
-    int cnt_2 = 0;
-    int cnt_3 = 0;
-
-    while((N % 2) == 0) {
-        N /= 2;
-        cnt_2++;    
-    }
-    while((N % 3) == 0) {
-        N /= 3;
-        cnt_3++;
-    }
-    return cnt_2 + cnt_3;
-}
-
-
 int main() {
     int N;
     cin >> N;
-    
-    // int com_div = Count_common_divider(N);
-    // int min = com_div;
-    // for(int i = 1; i <= com_div; i++) {
-    //     if(Count_common_divider(N-i) + i < min) {
-    //         min = Count_common_divider(N-i) + i;
-    //     }
-    // }
-    
-    cout << min;
+    vector<int> v(N+1);
+    int temp_2;
+    int temp_3;
+    int temp_1;
+    int min;
+    v[1] = 0;
+
+    for(int i = 2; i <= N; i++) {
+        
+        temp_1 = v[i-1] + 1;
+        if(i % 3 == 0) {
+            temp_3 = v[i/3] + 1;
+            
+            if(i % 2 == 0) {
+                temp_2 = v[i/2] + 1;
+                temp_3 > temp_2 ? (temp_2 > temp_1 ? min = temp_1: min = temp_2) : (temp_3 > temp_1 ? min = temp_1 : min = temp_3);
+            } else {
+                temp_3 > temp_1 ? min = temp_1 : min = temp_3;
+            }
+
+
+        } else if(i % 2 == 0) {
+            temp_2 = v[i/2] + 1;
+            temp_2 > temp_1 ? min = temp_1 : min = temp_2;
+        } else {
+            min = temp_1;
+        }
+
+
+        
+        v[i] = min;
+        cout << i << "번째 : " << min <<'\n';
+    }
+
+    cout << v[N];
 
     return 0;
 }
