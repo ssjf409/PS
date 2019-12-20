@@ -1,13 +1,5 @@
 {
     "files.associations": {
-        "ostream": "cpp",
-        "xstring": "cpp",
-        "string": "cpp",
-        "iostream": "cpp",
-        "ios": "cpp",
-        "xiosbase": "cpp",
-        "utility": "cpp",
-        "vector": "cpp"
-    },
-    "C_Cpp.errorSquiggles": "Disabled"
+        "string": "cpp"
+    }
 }
