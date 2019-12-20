@@ -11,17 +11,47 @@ int main() {
     for(int i = 0; i < test_case; i++) {
         int N, M;
         cin >> N >> M;
-        queue<int> q;
+        queue<pair<int, int>> q;
 
-        for(int i = 0; i < N; i++) {
+        int cnt = 0;
+
+        for(int j = 0; j < N; j++) {
             int temp;
             cin >> temp;
-            q.push(temp);
+            q.push(make_pair(temp,j));
         }
+
+        while(!q.empty()) {
+            pair<int, int> temp = q.front();
+            q.pop();
+
+            int q_length = q.size();
+            bool flag = false;
+            for(int j = 0; j < q_length; j++) {
+                if(temp.first < q.front().first) {
+                    flag = true;
+                    break;
+                }
+                q.push(q.front());
+                q.pop();
+            }
+            
+            if(flag) {
+                q.push(temp);
+            } else {
+                cnt++;
+                if(temp.second == M) {
+                    cout << cnt << '\n';
+                }
+            }
+        }
+        
+
 
         
 
     }
+    
 
     return 0;
 }
