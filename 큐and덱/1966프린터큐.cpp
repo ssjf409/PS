@@ -30,7 +30,6 @@ int main() {
             for(int j = 0; j < q_length; j++) {
                 if(temp.first < q.front().first) {
                     flag = true;
-                    break;
                 }
                 q.push(q.front());
                 q.pop();
