@@ -80,7 +80,7 @@ int main() {
         }
     }
 
-    cout << str_color ;
+    cout << str_color;
     return 0;
 
     // compress(0, 0, N, N);

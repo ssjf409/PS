@@ -5,46 +5,38 @@
 using namespace std;
 
 
-vector<vector<pair<int, bool>>> v;
-
-int sum = 0;
-int height = 0;
-
-
-void dfs(int a, int b) {
-    if(v[a][b].second) return;
-    v[a][b].second = true;
-    
+void dfs(int a, int b, vector<vector<bool>> &layer_v, vector<vector<bool>> &result_v) {
+    if()
 }
 
+
 int main() {
-    // N, M이 3보다 작으면 무조건 0 리턴
     int N, M;
     cin >> N >> M;
+    vector<vector<int>> map_v(N+2, vector<int>(M+2, -1));
 
-    
-    for(int i = 0; i < N; i++) {
-        vector<pair<int, bool>> v_row(M, make_pair(0, false));
-        v.push_back(v_row);
-    }
-
-    for(int i = 0; i < N; i++) {
+    for(int i = 1; i <= N; i++) {
         string str;
         cin >> str;
-        for(int j = 0; j < M; j++) {
-            v[i][j].first = str[j];
+        for(int j = 1; j <= M; j++) {
+            map_v[i][j] = str[j-1];
         }
     }
-
-    for(height = 9; height > 0; height--) {
-        for(int i = 1; i < N - 1; i++) {
-            for(int j = 1; j < M - 1; j++) {
-                dfs(i, j);
+    for(int i = 2; i <= 9; i++) {
+        vector<vector<bool>> layer_v(N+2, vector<bool>(M+2, false));
+        for(int j = 1; j <= 9; j++) {
+            for(int k = 1; k <= 9; k++) {
+                if(map_v[j][k] >= i) {
+                    layer_v[j][k] = true;
+                }
+            }
+        }
+        vector<vector<bool>> result_v(N+2, vector<bool>(M+2, false));
+        for(int j = 1; j <= 9; j++) {
+            for(int k = 1; k <= 9; k++) {
+                dfs(j,k,layer_v,result_v);
             }
         }
     }
-
-
-
     return 0;
 }
