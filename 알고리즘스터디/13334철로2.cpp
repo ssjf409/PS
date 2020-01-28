@@ -23,6 +23,7 @@ int main() {
         }
         
     }
+    
 
 
     cin >> d;

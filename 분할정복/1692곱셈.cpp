@@ -2,17 +2,20 @@
 
 using namespace std;
 
+long long mult(long long a, long long b, long long c) {
+    if(b == 1) return a % c;
+    if(b % 2 == 1) {
+        return (mult(a, b / 2, c) * mult(a, b / 2 + 1, c)) % c;
+    } else {
+        return (mult(a, b / 2, c) * mult(a, b / 2, c)) % c;
+    }
+}
+
 int main() {
-    long long A, B, C;
+    int A, B, C;
     cin >> A >> B >> C;
 
-    A = A % C;
-    
-
-    while(B-- > 0) {
-        A = (A * A) % C;
-    }
-
-    cout << A % C;
+    long long result = mult(A, B, C);
+    cout << result;
     return 0;
 }

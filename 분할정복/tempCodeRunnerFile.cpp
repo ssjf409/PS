@@ -1,1 +1,1 @@
-    while(B-- > 0) {
+mat_pow
