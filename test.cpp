@@ -2,7 +2,13 @@
 
 using namespace std;
 
+class Board {
+    private:
+    static int size;
+    static string arr[10];
+};
+
 int main() {
-    cout << "hello world2";
+
     return 0;
 }

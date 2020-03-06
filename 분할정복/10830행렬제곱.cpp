@@ -100,6 +100,10 @@ vector<vector<long long>> mat_pow(vector<vector<long long>> &a, long long b) {
 
 
 int main() {
+    
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    
     int N;
     long long B;
     cin >> N >> B;

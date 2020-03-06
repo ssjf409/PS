@@ -33,30 +33,38 @@ int main() {
     //     cout << pq.top().first << ' ' << pq.top().second << '\n';
     //     pq.pop();
     // }
-
-    int start = pq.top().first;
-    int end = start + d;
-    int cnt = 0;
-    while(!pq.empty()) {
-        
-        if(pq.top().second > end) {
+    int pq_length = pq.size();
+    for(int i = 0; i < pq_length; i++) {
+        int start = pq.top().first;
+        for(int j = i; j < pq_length; j++) {
             
-            start = pq.top().first;
-            end = start + d;
-            if(cnt > max_cnt) {
-                max_cnt = cnt;
-            }
-            cnt = 0;
-
-            pq.pop();
-            continue;
         }
-
-        cnt++;
-        pq.pop();
-
-
     }
+
+
+    // int start = pq.top().first;
+    // int end = start + d;
+    // int cnt = 0;
+    // while(!pq.empty()) {
+        
+    //     if(pq.top().second > end) {
+            
+    //         start = pq.top().first;
+    //         end = start + d;
+    //         if(cnt > max_cnt) {
+    //             max_cnt = cnt;
+    //         }
+    //         cnt = 0;
+
+    //         pq.pop();
+    //         continue;
+    //     }
+
+    //     cnt++;
+    //     pq.pop();
+
+
+    // }
 
     cout << max_cnt;
 

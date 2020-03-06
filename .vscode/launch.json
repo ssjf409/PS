@@ -4,12 +4,16 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
+        
+        
+
 
         {
             "name": "(gdb) 시작",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/${fileBasenameNoExtension}.exe", //${workspaceFolder},${fileDirname}
+            "program": "${workspaceFolder}/debuging.exe", //${workspaceFolder},${fileDirname}
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
