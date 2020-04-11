@@ -1,91 +1,72 @@
 #include <iostream>
 #include <vector>
-#define INF 987654321 
+#include <cstdio>
+#include <queue>
 
 using namespace std;
-int dy[4] = {-1, 1, 0, 0};
-int dx[4] = {0, 0, 1, -1};
-void isClose(vector<vector<int>>& circle, int y, int x) {
-    int dot = circle[y][x];
-    if(y + dy[0] >= 0) {
-        if(circle[y + dy[0]][x] == dot) circle[y + dy[0]][x] = INF;
-    }
-    if(y + dy[1] < circle.size()) {
-        if(circle[y + dy[1]][x] == dot) circle[y + dy[1]][x] = INF;
-    }
-    if(x + dx[3] < circle[0].size()) {
-        if(circle[y][x + dx[3]] == dot) circle[y][x + dx[3]] = INF;
-    }
-    if(x + dx[4] >= 0) {
-        if(circle[y][x + dx[4]] == dot) circle[y][x + dx[4]] = INF;
-    }
+
+
+void addEdge(vector<vector<int>>& adj_list, vector<int>& indegree, int u, int v) {
+    adj_list[u].push_back(v);
+    indegree[v]++;
 }
 
-void deleteClose(vector<vector<int>>& circle, int y, int x) {
-    if(y + dy[0] >= 0) {
-        circle[y + dy[0]][x] = 0;
+vector<int> topologicalSort(const vector<vector<int>>& adj_list, vector<int>& indegree, vector<int>& load) {
+    int N = indegree.size() - 1;
+    vector<int> sum(N + 1, 0);
+    queue<int> q;
+    // vector<int> ret;
+    for(int i = 1; i <= N; i++) {
+        if(indegree[i] == 0) q.push(i);
     }
-    if(y + dy[1] < circle.size()) {
-        circle[y + dy[1]][x] = 0;
+
+    for(int i = 1; i <= N; i++) {
+        if(q.empty()) {
+            cout << "has cycle";
+            return sum;
+        }
+        int current = q.front();
+        q.pop();
+        sum[current] += load[current];
+        for(int j = 0; j < adj_list[current].size(); j++) {
+            int next = adj_list[current][j];
+            if(sum[next] < load[current]) {
+                sum[next] = load[current];
+            }
+            if(--indegree[next] == 0) {
+                q.push(next);
+            }
+        }
     }
-    if(x + dx[3] < circle[0].size()) {
-        circle[y][x + dx[3]] = 0;
-    }
-    if(x + dx[4] >= 0) {
-        circle[y][x + dx[4]] = 0;
-    }
+    return sum;
+
 }
 
 int main() {
-    int N, M, T;
-    cin >> N >> M >> T;
-    vector<vector<int>> circle;
-    for(int i = 0; i < N; i++) {
-        vector<int> temp;
-        int t;
-        for(int j = 0; j < M; j++) {
-            cin >> t;
-            temp.push_back(t);
-        }
-        circle.push_back(temp);
-    }
-
-    int x, d, k;
-    for(int i = 0; i < T; i++) {
-        cin >> x >> d >> k;
-        int arr[N+1] = {0};
-        for(int j = 0; j < N; j++) {
-            if((j+1) % x == 0 && d == 0) {
-                arr[j] += k;
-            } else if( (j+1) % x == 0 && d == 1) {
-                arr[j] -= k;
-            }
-        }
-        int temp[M] = {0};
-        for(int j = 0; j < N; j++) {
-            for(int l = 0; l < M; l++) {
-                temp[(l + temp[l]) % M] = circle[j][l];
-            }
-            for(int l = 0; l < M; l++) {
-                circle[j][l] = temp[l];
-            }
-        }
-    }
-    for(int i = 0; i < N; i++) {
-        for(int j = 0; j < M; j++) {
-            isClose(circle, i, j);
-        }
-    }
-    double sum = 0;
-    for(int i = 0; i < N; i++) {
-        for(int j = 0; j < M; j++) {
-            if(circle[i][j] != INF) sum += circle[i][j];
-        }
-    }
-    sum +=
+    
     
 
+    int N, cnt, K;
+    cin >> N;
+
+    vector<vector<int>> adj_list(N + 1, vector<int>());
+    vector<int> indegree(N + 1 , 0);
+    vector<int> load(N + 1, 0);
+    vector<int> result;
 
 
+    for(int i = 1; i <= N; i++) {
+        cin >> load[i] >> cnt;
+        for(int j = 0; j < cnt; j++) {
+            cin >> K;
+            addEdge(adj_list, indegree, K, i);
+        }
+    }
+    
+    result = topologicalSort(adj_list, indegree, load);
+
+    for(const auto& element : result) {
+        cout << element << ' ';
+    }
     return 0;
 }
