@@ -1,22 +1,18 @@
-#include <stdio.h>
- 
+#include <iostream>
+
+using namespace std;
+
 int main() {
-    int age;
-    double weight;
-    char alpha;
-    
-    printf("나이를 입력해주세요.");
-    scanf("%d", &age);
- 
-    printf("몸무게를 입력해주세요.");
-    scanf("%lf", &weight);
- 
-    printf("좋아하는 알파벳 1글자를 입력해주세요.");
-    scanf("%c", &alpha);
-    
-    printf("나이 = %d\n", age);
-    printf("몸무게 = %lf\n", weight);
-    printf("좋아하는 알파벳 = %c\n", alpha);
- 
+
+    int arr[] = {1, 2, 3, 4, 5, 6, 7,};
+
+    for(int element : arr) {
+        element = 1;
+    }
+
+    for(const auto& element : arr) {
+        cout << element << ' ';
+    }
+
     return 0;
 }

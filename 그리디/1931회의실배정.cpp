@@ -48,7 +48,7 @@ int main() {
     int max = 0;
 
     
-    int temp = Count_max(v, temp_v);
+    int temp; //= Count_max(v, temp_v);
 
     if(temp > max) {
         max = temp;
