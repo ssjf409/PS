@@ -20,11 +20,13 @@ int getMax(int start) {
     ret = 0;
 
     
-    for(int i = lower_bound(idx1.begin(), idx1.end(), start) - idx1.begin() + 1; i < N; i++) {
-        if(start == -1 || conf[start].second < conf[i].first) {
-            ret = max(ret, getMax(i) + 1);
-        }
-    }
+    // for(int i = lower_bound(idx1.begin(), idx1.end(), start) - idx1.begin() + 1; i < N; i++) {
+    //     if(start == -1 || conf[start].second < conf[i].first) {
+    //         ret = max(ret, getMax(i) + 1);
+    //     }
+    // }
+
+    
 
     return ret;
 }
