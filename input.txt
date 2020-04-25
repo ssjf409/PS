@@ -2,4 +2,4 @@
 3
 geo
 oji
-geojing
+geojin

@@ -196,7 +196,7 @@ int main(void)
                               break;
 
                }
-
+                
                word[K] = "";
 
  
