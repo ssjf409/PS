@@ -1,6 +1,9 @@
+// https://www.acmicpc.net/problem/2194
 #include <iostream>
 #include <vector>
 #include <queue>
+#define INF 987654321
+#define endl '\n'
 
 
 using namespace std;
@@ -9,19 +12,21 @@ using namespace std;
 struct Point {
     int y;
     int x;
-    Point(int a, int b) : y(a), x(b) {}
+    int dist;
+    Point(int a, int b, int c) : y(a), x(b), dist(c) {}
 };
 
-int dy[4] = {0, 0, -1, 1};
-int dx[4] = {-1, 1, 0, 0};
+const int dy[4] = {0, 0, -1, 1};
+const int dx[4] = {-1, 1, 0, 0};
 
 int N, M, A, B, K;
 
 vector<vector<int>> map;
+vector<vector<bool>> visited;
 
 
-bool canGo(int cy, int cx, int my, int mx) {
-    if(my < 0 || mx < 0 || my + A >= N || mx + B >= M) return false;
+bool canGo(int my, int mx) {
+    if(my < 0 || mx < 0 || my + A - 1 >= N || mx + B - 1 >= M) return false;
     for(int i = my; i < my + A; i++) {
         for(int j = mx; j < mx + B; j++) {
             if(map[i][j] == -1) return false;
@@ -34,47 +39,37 @@ bool canGo(int cy, int cx, int my, int mx) {
 
 int bfs(int sy, int sx, int ey, int ex) {
 
-    Point p(sy, sx);
-
+    Point p(sy, sx, 0);
     queue<Point> q;
-
     q.push(p);
+    visited[sy][sx] = true;
 
-    int cnt = 0;
-    map[sy][sx] = cnt;
 
 
     while(!q.empty()) {
-        int qSize = q.size();
-        cnt++;
-
-        for(int i = 0; i < qSize; i++) {
-            Point curPoint = q.front();
+        Point curPoint = q.front();
+        
+        q.pop();
+        int y = curPoint.y;
+        int x = curPoint.x;
+        int dist = curPoint.dist;
             
-            q.pop();
-            int y = curPoint.y;
-            int x = curPoint.x;
-            map[y][x] = cnt;
+        if (y == ey && x == ex) {
+            return dist;
+        }
 
-            for(int j = 0; j < N; j++) {
-                for(int k = 0; k < M; k++) {
-                    cout << map[j][k];
-                }
-                cout << '\n';
-            }
-
-
-
-            for(int dir = 0; dir < 4; dir++){
-                int my = y + dy[dir];
-                int mx = x + dx[dir];
-                if(canGo(y, x, my, mx) && !map[my][mx]) {
-                    q.push(Point(my, mx));
-                }
+        for(int dir = 0; dir < 4; dir++){
+            int my = y + dy[dir];
+            int mx = x + dx[dir];
+            if(canGo(my, mx) && !visited[my][mx]) {
+                visited[my][mx] = true;
+                q.push(Point(my, mx, dist + 1));
             }
         }
     }
-    return map[ey][ex];
+
+    return -1;
+    
 }
 
 
@@ -82,6 +77,7 @@ int bfs(int sy, int sx, int ey, int ex) {
 int main() {
     cin >> N >> M >> A >> B >> K;
     map.assign(N, vector<int>(M, 0));
+    visited.assign(N, vector<bool>(M, false));
 
     for(int i = 0; i < K; i++) {
         int a, b;
@@ -95,7 +91,7 @@ int main() {
 
     int res = bfs(sy, sx, ey, ex);
 
-    if(res == 0) {
+    if(res == INF) {
         cout << -1;
     } else {
         cout << res;
