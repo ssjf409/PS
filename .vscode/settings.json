@@ -48,6 +48,9 @@
         "xstring": "cpp",
         "xiosbase": "cpp",
         "queue": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "set": "cpp",
+        "xhash": "cpp",
+        "xtree": "cpp"
     }
 }
