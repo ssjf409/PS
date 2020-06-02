@@ -1,113 +1,100 @@
 #include <iostream>
-#include <queue>
-#include <vector>
 #include <cstring>
-
-#define INF 987654321
+#include <queue>
 
 using namespace std;
+
+typedef pair<int, int> pii;
+typedef pair<int, pii> node;
+
+
+int N, M;
+int board[101][101];
+bool visited[101][101];
+int bVal[101][101][2];
 
 const int dy[4] = {0, 0, -1, 1};
 const int dx[4] = {-1, 1, 0, 0};
 
-struct State {
-    int y, x, max;
-    int dir;
-    bool canJump;
+const int dy2[5] = {0, 0, 0, -2, 2};
+const int dx2[5] = {0, -2, 2, 0, 0};
 
-    State(int y_, int x_, int max_, int dir_, bool canJump_) : y(y_), x(x_), max(max_), dir(dir_), canJump(canJump_) {}
-};
-
-int N, M;
-vector<vector<int>> board;
-vector<vector<vector<int>>> visited; // y, x, canJump(bool) : 점프 사용한 거랑 안한거랑 구별해서 값 저장한다.
+inline int max(const int a, const int b) {
+    return a > b ? a : b;
+}
 
 
-// 큐 작은 거부터 꺼내기
-struct compare {
-    bool operator()(const State& a, const State& b) {
-        return a.max > b.max;
-    }
-};
+inline int min(const int a, const int b) {
+    return a < b ? a : b;
+}
 
-int bfs() {
-    priority_queue<State, vector<State>, compare> pq;
+void scan(const int y, const int x, const bool canJump) {
+    priority_queue<node> pq;
+    int maxVal = board[y][x];
 
-    visited[0][0][true] = board[0][0];
-    // 맨처음은 방향이 없으므로 4를 준다.
-    pq.push(State(0, 0, board[0][0], 4, true));
+    memset(visited, false, sizeof(visited));
+
+    bVal[y][x][canJump] = board[y][x];
+    visited[y][x] = true;
+    
+    pq.push({-board[y][x], {y, x}});
 
     while(!pq.empty()) {
-        State cur = pq.top();
+        node cur = pq.top();
         pq.pop();
 
-        int cy = cur.y;
-        int cx = cur.x;
-        int cdir = cur.dir;
-        bool ccanJump = cur.canJump;
-        int cmax = cur.max;
+        int cmax = -cur.first;
+        int cy = cur.second.first;
+        int cx = cur.second.second;
 
-
-        // 같은 상태로 방문한 적 있고, 이전 값이 더 낮다면 더해볼 필요가 없다.
-        if(visited[cy][cx][ccanJump] != -1 && visited[cy][cx][ccanJump] < cmax) continue;
-
-
-        // 방문한적 없으면 방문체크
-        // 우선순위 큐로 방문 했기 때문에 가장 맨처음 방문 했을 때가 최소 경로로 온 경우다.
-        visited[cy][cx][ccanJump] = cmax;
-
-        if(cur.y == N - 1 && cur.x == M - 1) {
-            return cmax;
-        }
-
-        
+        if(maxVal < cmax) maxVal = cmax;
+        bVal[cy][cx][canJump] = maxVal;
 
         for(int dir = 0; dir < 4; dir++) {
             int ny = cy + dy[dir];
             int nx = cx + dx[dir];
 
             if(ny < 0 || ny >= N || nx < 0 || nx >= M) continue;
-            if(visited[ny][nx][ccanJump] != -1) continue;
-            
-            pq.push(State(ny, nx, max(cmax, board[ny][nx]), dir, ccanJump));
-
-
-            // 점프 할 수 있고, 같은 방향일 때만
-            if(!ccanJump) continue;
-
-
-            ny += dy[dir];
-            nx += dx[dir];
-
-            if(ny < 0 || ny >= N || nx < 0 || nx >= M) continue;
-            if(visited[ny][nx][ccanJump] != -1) continue;
-
-            pq.push(State(ny, nx, max(cmax, board[ny][nx]), dir, false));
-
+            if(visited[ny][nx]) continue;
+            visited[ny][nx] = true;
+            pq.push({-board[ny][nx], {ny, nx}});
         }
     }
-
-    return INF;
 }
 
 
+
 int main() {
+    ios_base :: sync_with_stdio(false); 
+    cin.tie(NULL); cout.tie(NULL);
     cin >> N >> M;
-
-    board.assign(N, vector<int>(M));
-    // memset(visited, -1, sizeof(visited));
-    
-    // [N][M][2] : -1로 초기화
-    visited.assign(N, vector<vector<int>>(M, vector<int>(2, -1)));
-
-    for(int i = 0; i < N; i++) {
+    for(int i = 0 ; i < N; i++) {
         for(int j = 0; j < M; j++) {
             cin >> board[i][j];
         }
     }
+    
 
-    cout << bfs();
+    scan(0, 0, true);
 
+    scan(N - 1, M - 1, false);
+
+    int ans = -1;
+    for(int y = 0; y < N; y++) {
+        for(int x = 0; x < M; x++) {
+            for(int dir = 0; dir < 5; dir++) {
+                int ny = y + dy2[dir];
+                int nx = x + dx2[dir];
+
+                if(ny < 0 || ny >= N || nx < 0 || nx >= M) continue;
+
+                int cand = max(bVal[y][x][true], bVal[ny][nx][false]);
+                if(ans == -1 || ans > cand) ans = cand;
+            }
+        }
+    }
+
+    cout << ans;
 
     return 0;
 }

@@ -51,6 +51,7 @@
         "xutility": "cpp",
         "set": "cpp",
         "xhash": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "ios": "cpp"
     }
 }
