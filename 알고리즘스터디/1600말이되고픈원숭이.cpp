@@ -72,10 +72,6 @@ int bfs() {
                 q.push({-cmax-1, {ck - 1, {ny, nx}}});
             }
         }
-
-
-
-
     }
 
     return -1;
