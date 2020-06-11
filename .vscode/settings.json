@@ -53,6 +53,7 @@
         "xhash": "cpp",
         "xtree": "cpp",
         "ios": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "bitset": "cpp"
     }
 }
