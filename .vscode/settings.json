@@ -54,6 +54,15 @@
         "xtree": "cpp",
         "ios": "cpp",
         "stack": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "concepts": "cpp",
+        "ctime": "cpp",
+        "xfacet": "cpp",
+        "xlocale": "cpp",
+        "xlocinfo": "cpp",
+        "xlocnum": "cpp",
+        "xmemory": "cpp",
+        "xstddef": "cpp",
+        "xtr1common": "cpp"
     }
 }

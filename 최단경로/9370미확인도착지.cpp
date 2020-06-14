@@ -12,6 +12,8 @@ void dijkstra(vector<vector<pair<int, int>>>& vertex, vector<int>& dist, int sta
     // weight, vertex
     pq.push({0, start});
 
+    int ghPath = INF;
+
     while(!pq.empty()) {
         int cur = pq.top().second;
         int cdist = -pq.top().first;
@@ -41,7 +43,8 @@ int main() {
         cin >> n >> m >> t;
         cin >> s >> g >> h;
         vector<vector<pair<int, int>>> vertex(n + 1, vector<pair<int, int>>());
-        vector<int> dist;
+        vector<int> dist(n + 1, INF);
+        vector<int> dist2(n + 1, INF);
 
         int g_h;
         
@@ -54,26 +57,37 @@ int main() {
         }
 
         vector<int> result;
-        int x;
+        vector<int> target(t, 0);
         for(int j = 0; j < t; j++) {
-            cin >> x;
-
-            dist.assign(n + 1, INF);
-            dijkstra(vertex, dist, s);
-            int s_x = dist[x];
-            int s_g = dist[g];
-            int s_h = dist[h];
-
-            dist.assign(n + 1, INF);
-            dijkstra(vertex, dist, x);
-            int g_x = dist[g];
-            int h_x = dist[h];
-
-            int pathA = s_g + g_h + h_x;
-            int pathB = s_h + g_h + g_x;
-            pathA = ((pathA > pathB) ? pathB : pathA);
-            if(pathA == s_x) result.push_back(x);
+            cin >> target[j];
         }
+
+
+        int s_x;
+        int mid1_mid2 = g_h;
+        int mid1, mid2;
+        
+
+        dijkstra(vertex, dist, s);
+
+        if(dist[g] > dist[h]) {
+            mid1 = h;
+            mid2 = g;
+        } else {
+            mid1 = g;
+            mid2 = h;
+        }
+
+        dijkstra(vertex, dist2, mid2);
+
+        for(int j = 0; j < target.size(); j++) {
+            int path = dist[mid1] + mid1_mid2 + dist2[target[j]];
+            if(path == dist[target[j]]) result.push_back(target[j]);
+        }
+
+
+
+        
         sort(result.begin(), result.end());
         for(const auto& el : result) {
             cout << el << ' ';
