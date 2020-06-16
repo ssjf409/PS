@@ -27,13 +27,16 @@ void getNum(int num, int x) {
         }
     }
     v.push_back(nx);
-    getNum(num + cache[][nx], )
-
 }
 
 int main() {
     int N;
     cin >> N;
+
+    if(N > 1023) {
+        cout << -1;
+        return 0;
+    }
 
     memset(cache, 0, sizeof(cache));
 
@@ -49,55 +52,6 @@ int main() {
         }
     }
 
-
-    // int before = 0;
-    // int sum = 0;
-    // for(int i = 1; i <= 10; i++) {
-    //     before = sum;
-    //     sum = 0;
-    //     for(int j = 0; j <= 9; j++) {
-    //         sum += cache[i][j];
-    //         cache[i][j] += before;
-    //     }
-    //     cout << endl;
-    // }
-
-
-
-    for(int i = 1; i <= 10; i++) {
-        for(int j = 0; j <= 9; j++) {
-            cout << cache[i][j] << ' ';
-        }
-        cout << endl;
-    }
-
-    int y = 0;
-    int x = 0;
-    bool flag = true;
-    int num = 0;
-    for(int i = 1; i <= 10; i++) {
-        for(int j = 0; j <= 9; j++) {
-            if(N - cache[i][j] <= 0) {
-                y = i;
-                x = j;
-                flag = false;
-                break;
-            } else {
-                N -= cache[i][j];
-            }
-        }
-        if(!false) break;
-    }
-    // int sum = 0;
-    // for(int i = 1; i <= 10; i++) {
-    //     for(int j = i - 1; j <= 9; j++) {
-    //         sum += cache[i][j];
-    //         cache[i][j] = sum;
-    //     }
-    //     cout << endl;
-    // }
-
-
     // for(int i = 1; i <= 10; i++) {
     //     for(int j = 0; j <= 9; j++) {
     //         cout << cache[i][j] << ' ';
@@ -106,6 +60,39 @@ int main() {
     // }
 
 
+    int cnt = N;
+    long long ret = 0;
+    while(cnt > 0) {
+        ret *= 10;
+        bool flag = false;
+        int idx = 0;
+        for(int i = 1; i <= 10; i++) {
+            for(int j = i - 1; j <= 9; j++) {
+                if(cnt - cache[i][j] <= 0) {
+                    idx = i;
+                    ret += j;
+                    flag = true;
+                    break;
+                } else {
+                    cnt -= cache[i][j];
+                }
+            }
+            if(flag) break;
+        }
+        while(idx-- != 1) {
+            ret *= 10;
+            for(int j = idx - 1; j <= 9; j++) {
+                if(cnt - cache[idx][j] <= 0) {
+                    ret += j;
+                    break;
+                } else {
+                    cnt -= cache[idx][j];
+                }
+            }
+        }
+        if(idx <= 1) break;
+    }
+    cout << ret;
 
 
     return 0;
