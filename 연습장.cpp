@@ -1,15 +1,28 @@
 #include <iostream>
-
+#include <vector>
 using namespace std;
 
 
-int main() {
+vector<int> getPatialMatch(const string& N) {
+    int m = N.size();
+    vector<int> pi(m, 0);
 
-    string str;
-    cin >> str;
-    cout << str.substr(2, 0) << endl;
-    cout << str.substr(2, 1) << endl;
-    cout << str.substr(2, 2) << endl;
+    int begin = 1, matched = 0;
 
-    return 0;
+    while(begin + matched < m) {
+        if(N[begin + matched] == N[matched]) {
+            ++matched;
+            pi[begin + matched - 1] = matched;
+        }
+        else {
+            if(matched == 0) {
+                ++begin;
+            }
+            else {
+                begin += matched - pi[matched - 1];
+                matched = pi[matched - 1];
+            }
+        }
+    }
+    return pi;
 }
