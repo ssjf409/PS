@@ -11,15 +11,10 @@ int arr[10000][3];
 int cache[10001][3][3];
 int path[10001];
 
-int getMinCost(int pos, int previous, int first) {
+int getMinCost(int pos, int previous) {
     // 기저 사례
     if(pos == N) {
-        for(int i = 0; i < N; i++) {
-            cout << path[i] << ' ';
-        }
-        cout << endl;
-
-        if(first == path[N - 1]) return INF;
+        if(path[0] == path[N - 1]) return INF;
         return 0;
     }
 
@@ -30,9 +25,9 @@ int getMinCost(int pos, int previous, int first) {
 
 
     for(int i = 0; i < 3; i++) {
-        if(pos == 0 || previous != i) {
+        if(previous != i) {
             path[pos] = i;
-            ret = min(ret, getMinCost(pos + 1, (pos == 0) ? first : i, first) + arr[pos][i]);
+            ret = min(ret, getMinCost(pos + 1, i) + arr[pos][i]);
         }
     }
 
@@ -49,7 +44,9 @@ int main() {
 
     int ret = INF;
     for(int i = 0; i < 3; i++) {
-        ret = min(ret, getMinCost(0, 0, i));
+        path[0] = i;
+        first = i;
+        ret = min(ret, getMinCost(1, i) + arr[0][i]);
     }
     cout << ret;
     
