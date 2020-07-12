@@ -32,15 +32,12 @@ void moveFishs(vector<vector<pair<int, int>>>& board, vector<pair<int, int>>& fi
             board[cy][cx].first = tempA;
             board[cy][cx].second = tempB;
 
-            fishs[nFish] = fishs[i];
-            fishs[i] = {ny, nx};
-
-            // tempA = fishs[i].first;
-            // tempB = fishs[i].second;
-            // fishs[i].first = fishs[nFish].first;
-            // fishs[i].second = fishs[nFish].second;
-            // fishs[nFish].first = tempA;
-            // fishs[nFish].second = tempB;
+            tempA = fishs[i].first;
+            tempB = fishs[i].second;
+            fishs[i].first = fishs[nFish].first;
+            fishs[i].second = fishs[nFish].second;
+            fishs[nFish].first = tempA;
+            fishs[nFish].second = tempB;
 
             break;
         }
@@ -50,10 +47,22 @@ void moveFishs(vector<vector<pair<int, int>>>& board, vector<pair<int, int>>& fi
 
 int getMax(vector<vector<pair<int, int>>> board, vector<pair<int, int>> fishs, int y, int x) {
     int ret = 0;
+    
+
+    int temp = board[y][x].first;
+    fishs[board[y][x].first] = {-1, -1};
+    board[y][x].first = SHARK;
 
     moveFishs(board, fishs);
 
     int fishFirst, fishSecond, boardFirst;
+
+    // for(int i = 0; i < 4; i++) {
+    //     for(int j = 0; j < 4; j++) {
+    //         cout << board[i][j].second << ' ';
+    //     }
+    //     cout << endl;
+    // }
 
     for(int i = 1; i <= 3; i++) {
         int ny = y + dy[board[y][x].second] * i;
@@ -61,19 +70,19 @@ int getMax(vector<vector<pair<int, int>>> board, vector<pair<int, int>> fishs, i
         if(ny < 0 || ny >= 4 || nx < 0 || nx >= 4) break;
         if(board[ny][nx].first == 0) continue;
 
+        int nFish = board[ny][nx].first;
 
-        fishFirst = fishs[board[ny][nx].first].first;
-        fishSecond = fishs[board[ny][nx].first].second;
-        fishs[board[ny][nx].first] = {-1, -1};
-        boardFirst = board[ny][nx].first;
-        board[ny][nx].first = SHARK;
+        fishFirst = fishs[nFish].first;
+        fishSecond = fishs[nFish].second;
+        fishs[nFish] = {-1, -1};
         board[y][x].first = 0;
+        board[ny][nx].first = SHARK;
 
-        ret = max(ret, getMax(board, fishs, ny, nx) + boardFirst);
+        ret = max(ret, getMax(board, fishs, ny, nx)) + temp;
 
+        board[ny][nx].first = nFish;
         board[y][x].first = SHARK;
-        board[ny][nx].first = boardFirst;
-        fishs[board[ny][nx].first] = {fishFirst, fishSecond};
+        fishs[nFish] = {fishFirst, fishSecond};
 
     }
     
@@ -96,11 +105,7 @@ int main() {
         }
     }
 
-    int temp = board[0][0].first;
-    fishs[board[0][0].first] = {-1, -1};
-    board[0][0].first = SHARK;
-
-    cout << getMax(board, fishs, 0, 0) + temp;
+    cout << getMax(board, fishs, 0, 0);
 
     return 0;
 }
