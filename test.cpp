@@ -1,58 +1,44 @@
 #include <iostream>
+#include <string>
+#include <cstdio>
 #include <vector>
-#include <cstring>
-#include <algorithm>
-#define INF 987654321
-
 using namespace std;
-
-int N, first;
-int arr[10000][3];
-int cache[10001][3][3];
-int path[10001];
-
-int getMinCost(int pos, int previous, int first) {
-    // 기저 사례
-    if(pos == N) {
-        for(int i = 0; i < N; i++) {
-            cout << path[i] << ' ';
-        }
-        cout << endl;
-
-        if(first == path[N - 1]) return INF;
-        return 0;
+vector<int> getPi(string p){
+    int m = (int)p.size(), j=0;
+    vector<int> pi(m, 0);
+    for(int i = 1; i< m ; i++){
+        while(j > 0 && p[i] !=  p[j])
+            j = pi[j-1];
+        if(p[i] == p[j])
+            pi[i] = ++j;
     }
-
-    int& ret = cache[pos][previous][first];
-    if(ret != -1) return ret;
-
-    ret = INF;
-
-
-    for(int i = 0; i < 3; i++) {
-        if(pos == 0 || previous != i) {
-            path[pos] = i;
-            ret = min(ret, getMinCost(pos + 1, (pos == 0) ? first : i, first) + arr[pos][i]);
-        }
-    }
-
-    return ret;
+    return pi;
 }
-
-int main() {
-    cin >> N;
-    for(int i = 0; i < N; i++) {
-        cin >> arr[i][0] >> arr[i][1] >> arr[i][2];
+vector<int> kmp(string s, string p){
+    vector<int> ans;
+    auto pi = getPi(p);
+    int n = (int)s.size(), m = (int)p.size(), j =0;
+    for(int i = 0 ; i < n ; i++){
+        while(j>0 && s[i] != p[j])
+            j = pi[j-1];
+        if(s[i] == p[j]){
+            if(j==m-1){
+                ans.push_back(i-m+1);
+                j = pi[j];
+            }else{
+                j++;
+            }
+        }
     }
-
-    memset(cache, -1, sizeof(cache));
-
-    int ret = INF;
-    for(int i = 0; i < 3; i++) {
-        ret = min(ret, getMinCost(0, 0, i));
-    }
-    cout << ret;
-    
-
+    return ans;
+}
+int main(){
+    string s, p;
+    getline(cin, s);
+    getline(cin, p);
+    auto matched = kmp(s,p);
+    printf("%d\n", (int)matched.size());
+    for(auto i : matched)
+        printf("%d ", i+1);
     return 0;
 }
