@@ -1,47 +1,81 @@
 #include <iostream>
-#include <string>
-#include <cstdio>
-#include <vector>
-#include <fstream>
+#include <cstring>
+#define MOD 1000000007
+#define MAX 1000000
+
 using namespace std;
-vector<int> getPi(string p){
-    int m = (int)p.size(), j=0;
-    vector<int> pi(m, 0);
-    for(int i = 1; i< m ; i++){
-        while(j > 0 && p[i] !=  p[j])
-            j = pi[j-1];
-        if(p[i] == p[j])
-            pi[i] = ++j;
-    }
-    return pi;
+
+typedef long long ll;
+
+ll cache[MAX + 1];
+
+ll facto(ll n) {
+    if(n == 1 || n == 0) return 1;
+    ll& ret = cache[n];
+    if(ret != -1) return ret;
+
+    return ret = (n * facto(n - 1)) % MOD;
 }
-vector<int> kmp(string s, string p){
-    vector<int> ans;
-    auto pi = getPi(p);
-    int n = (int)s.size(), m = (int)p.size(), j =0;
-    for(int i = 0 ; i < n ; i++){
-        while(j>0 && s[i] != p[j])
-            j = pi[j-1];
-        if(s[i] == p[j]){
-            if(j==m-1){
-                ans.push_back(i-m+1);
-                j = pi[j];
-            }else{
-                j++;
-            }
-        }
-    }
-    return ans;
+
+ll getPath(ll dy, ll dx) {
+    cout << "============\n";
+    cout << facto(dy + dx) << endl;
+    cout << facto(dy) << endl;
+    cout << facto(dx) << endl;
+    return (facto(dy + dx) * 10 / facto(dy) / facto(dx) / 10) % MOD;
 }
-int main(){
-    ifstream in("input.txt");
-        
-    string s, p;
-    getline(in, s);
-    getline(in, p);
-    auto matched = kmp(s,p);
-    printf("%d\n", (int)matched.size());
-    for(auto i : matched)
-        printf("%d ", i+1);
-    return 0;
+
+
+int main() {
+	ll N, M;
+	ll acorny, acornx;
+	ll trapy, trapx;
+	cin >> N >> M;
+	cin >> acorny >> acornx;
+	cin >> trapy >> trapx;
+
+    memset(cache, -1, sizeof(cache));
+    
+    ll start2acorn = getPath(acorny, acornx);
+    ll acorn2goal = getPath((N - acorny), (M - acornx));
+    ll totalPath = start2acorn * acorn2goal % MOD;
+    cout << start2acorn << endl;
+    
+    if(trapy <= acorny && trapx <= acornx) {
+        ll start2trap = getPath(trapy, trapx);
+        ll trap2acorn = getPath((acorny - trapy), (acornx - trapx));
+        ll trapedPath = (start2trap * trap2acorn) % MOD * acorn2goal % MOD;
+        totalPath -= trapedPath;
+    } else if(trapy >= acorny && trapx >= acornx) {
+        ll acorn2trap = getPath((trapy - acorny), (trapx - acornx));
+        ll trap2goal = getPath((N - trapy), (M - trapx));
+
+        ll trapedPath = (start2acorn * acorn2trap) % MOD * trap2goal % MOD;
+        totalPath -= trapedPath;
+
+    }
+
+    
+    // ll start2acorn = acorny * acornx % MOD;
+    // ll acorn2goal = (N - acorny) * (M - acornx) % MOD;
+    // ll totalPath = start2acorn * acorn2goal % MOD;
+    
+    // if(trapy <= acorny && trapx <= acornx) {
+    //     ll start2trap = trapy * trapx % MOD;
+    //     ll trap2acorn = (acorny - trapy) * (acornx - trapx) % MOD;
+    //     ll trapedPath = (start2trap * trap2acorn) % MOD * acorn2goal % MOD;
+    //     totalPath -= trapedPath;
+    // } else if(trapy >= acorny && trapx >= acornx) {
+    //     ll acorn2trap = (trapy - acorny) * (trapx - acornx) % MOD;
+    //     ll trap2goal = (N - trapy) * (M - trapx) % MOD;
+
+    //     ll trapedPath = (start2acorn * acorn2trap) % MOD * trap2goal % MOD;
+    //     totalPath -= trapedPath;
+
+    // }
+
+    cout << totalPath;
+	
+	
+	return 0;
 }

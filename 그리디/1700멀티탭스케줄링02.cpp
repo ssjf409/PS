@@ -21,25 +21,14 @@ int main() {
     for(int i = 0; i < K; i++) {
         int cur = schedule[i];
         if(cnt == N) {
-            if(!pluged[cur]) {
+            if(pluged[cur]) continue;
 
-                vector<int> index(K + 1, INF);
-                for(int j = i; j < K; j++) {
-                    int n = schedule[j];
-                    if(index[n] > j) index[n] = j;
-                }
+            for(int j = 1; j <= K; j++) {
                 
-                int idx = 0;
-                for(int j = 1; j <= K; j++) {
-                    if(pluged[j]) {
-                        if(index[pluged[j]] > idx) idx = index[pluged[j]];
-                    }
-                }
-                pluged[idx] = false;
-                pluged[cur] = true;
-                changeCnt++;
-
             }
+
+
+            
         } else {
             if(!pluged[cur]) {
                 pluged[cur] = true;
