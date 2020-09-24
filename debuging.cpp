@@ -1,81 +1,90 @@
 #include <iostream>
-#include <cstring>
-#define MOD 1000000007
-#define MAX 1000000
+#include <vector>
+#include <string>
+#include <stack>
 
 using namespace std;
 
-typedef long long ll;
+long long solution(string block, int pos) {
+    long long answer = 0;
 
-ll cache[MAX + 1];
+    stack<pair<char, long long>> left;
+    stack<pair<char, long long>> right;
 
-ll facto(ll n) {
-    if(n == 1 || n == 0) return 1;
-    ll& ret = cache[n];
-    if(ret != -1) return ret;
-
-    return ret = (n * facto(n - 1)) % MOD;
-}
-
-ll getPath(ll dy, ll dx) {
-    cout << "============\n";
-    cout << facto(dy + dx) << endl;
-    cout << facto(dy) << endl;
-    cout << facto(dx) << endl;
-    return (facto(dy + dx) * 10 / facto(dy) / facto(dx) / 10) % MOD;
-}
+    char cur = block[pos - 1];
+    long long cStep = 1;
+    long long cnt = 0;
 
 
-int main() {
-	ll N, M;
-	ll acorny, acornx;
-	ll trapy, trapx;
-	cin >> N >> M;
-	cin >> acorny >> acornx;
-	cin >> trapy >> trapx;
-
-    memset(cache, -1, sizeof(cache));
-    
-    ll start2acorn = getPath(acorny, acornx);
-    ll acorn2goal = getPath((N - acorny), (M - acornx));
-    ll totalPath = start2acorn * acorn2goal % MOD;
-    cout << start2acorn << endl;
-    
-    if(trapy <= acorny && trapx <= acornx) {
-        ll start2trap = getPath(trapy, trapx);
-        ll trap2acorn = getPath((acorny - trapy), (acornx - trapx));
-        ll trapedPath = (start2trap * trap2acorn) % MOD * acorn2goal % MOD;
-        totalPath -= trapedPath;
-    } else if(trapy >= acorny && trapx >= acornx) {
-        ll acorn2trap = getPath((trapy - acorny), (trapx - acornx));
-        ll trap2goal = getPath((N - trapy), (M - trapx));
-
-        ll trapedPath = (start2acorn * acorn2trap) % MOD * trap2goal % MOD;
-        totalPath -= trapedPath;
-
+    for(int i = 0; i < pos - 1; i++) {
+        if(left.empty()) {
+            left.push({block[i], 1});
+        } else if(left.top().first == block[i]) {
+            int temp = left.top().second + 1;
+            left.pop();
+            left.push({block[i], temp});
+        } else {
+            left.push({block[i], 1});
+        }
     }
 
-    
-    // ll start2acorn = acorny * acornx % MOD;
-    // ll acorn2goal = (N - acorny) * (M - acornx) % MOD;
-    // ll totalPath = start2acorn * acorn2goal % MOD;
-    
-    // if(trapy <= acorny && trapx <= acornx) {
-    //     ll start2trap = trapy * trapx % MOD;
-    //     ll trap2acorn = (acorny - trapy) * (acornx - trapx) % MOD;
-    //     ll trapedPath = (start2trap * trap2acorn) % MOD * acorn2goal % MOD;
-    //     totalPath -= trapedPath;
-    // } else if(trapy >= acorny && trapx >= acornx) {
-    //     ll acorn2trap = (trapy - acorny) * (trapx - acornx) % MOD;
-    //     ll trap2goal = (N - trapy) * (M - trapx) % MOD;
+    for(int i = block.size() - 1; i >= pos; i--) {
+        if(right.empty()) {
+            right.push({block[i], 1});
+        } else if(right.top().first == block[i]) {
+            int temp = right.top().second + 1;
+            right.pop();
+            right.push({block[i], temp});
+        } else {
+            right.push({block[i], 1});
+        }
+    }
 
-    //     ll trapedPath = (start2acorn * acorn2trap) % MOD * trap2goal % MOD;
-    //     totalPath -= trapedPath;
 
-    // }
+    while(true) {
+        cnt += cStep;
+        if(cur == '>') {
+            if(right.empty()) {
+                break;
+            }
+            if(!left.empty() && left.top().first == '<') {
+                int temp = left.top().second + 1;
+                left.pop();
+                left.push({'<', temp});
+            } else {
+                left.push({'<', 1});
+            }
+            cur = right.top().first;
+            cStep = right.top().second;
+            right.pop();
+        } else {
+            if(left.empty()) {
+                break;
+            }
+            if(!right.empty() && right.top().first == '>') {
+                int temp = right.top().second + 1;
+                right.pop();
+                right.push({'>', temp});
+            } else {
+                right.push({'>', 1});
+            }
+            
+            cur = left.top().first;
+            cStep = left.top().second;
+            left.pop();
+        }
+    }
+    answer = cnt;
 
-    cout << totalPath;
-	
-	
-	return 0;
+
+    return answer;
+}
+
+int main() {
+    string block;
+    int pos;
+    cin >> block >> pos;
+    cout << solution(block, pos);
+
+    return 0;
 }

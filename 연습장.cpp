@@ -1,84 +1,68 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <climits>
+#define INF 987654321
 using namespace std;
 
-vector<vector<int>> adj;
-vector<int> no2serial, serial2no, locInTrip, depth;
-int nextSerial;
 
+// 정점의 개수
+int N, M;
+// 그래프의 인접 리스트, (연결된 정점 번호, 간선 가중치)쌍을 담는다.
+// 시작점을 제외한 모든 정점까지의 거리 상한을 INF로 초기화한다.
+vector<vector<pair<int, int>>> adj;
+vector<long long> dist;
 
-struct RMQ {
-    int n;
-    vector<int> rangeMin;
-
-    RMQ(const vector<int>& array) {
-        n = array.size();
-        rangeMin.resize(n * 4);
-        init(array, 0, n - 1, 1);
+// 음수 사이클이 있을 경우 텅 빈 배열을 반환한다.
+bool bellmanFord(int start) {
+    dist.assign(N + 1, INF);
+	dist[start] = 0;
+    
+    // 모든 간선을 살펴본다.
+    for (int i = 1; i < N; i++) {
+        for(int j = 0; j < adj[i].size(); j++) {
+            int next = adj[i][j].first;
+            int nextDist = adj[i][j].second + dist[i];
+            if(dist[i] == INF) continue;
+            if (dist[next] > nextDist) {
+                dist[next] = nextDist;
+            }
+        }
     }
 
-    int init(const vector<int>& array, int left, int right, int node) {
-        if(left == right) return rangeMin[node] = array[left];
-
-        int mid = (left + right) / 2;
-        int leftMin = init(array, left, mid, node * 2);
-        int rightMin = init(array, mid + 1, right, node * 2 + 1);
-        return rangeMin[node] = min(leftMin, rightMin);
+    // 음의 사이클이 존재하는 경우 false 반환
+    for(int i = 0; i < adj[N].size(); i++) {
+        int next = adj[N][i].first;
+        int nextDist = adj[N][i].second + dist[N];
+        if(dist[N] == INF) continue;
+        if (dist[next] > nextDist) {
+            return false;
+        }
     }
 
-    int query(int left, int right, int node, int nodeLeft, int nodeRight) {
-        if(right < nodeLeft || left > nodeRight) return INT_MAX;
-        if(left <= nodeLeft && nodeRight <= right) return rangeMin[node];
-        int mid = (nodeLeft + nodeRight) / 2;
-        return min(
-            query(left, right, node * 2, nodeLeft, mid), 
-            query(left, right, node * 2 + 1, mid + 1, nodeRight));
-    }
-
-    int query(int left, int right) {
-        return query(left, right, 1, 0, n - 1);
-    }
-
-    int update(int index, int newValue, int node, int nodeLeft, int nodeRight) {
-        if(index < nodeLeft || nodeRight < index) return rangeMin[node];
-        if(nodeLeft == nodeRight) return rangeMin[node] = newValue;
-        int mid = (nodeLeft + nodeRight) / 2;
-        return rangeMin[node] = min(
-            update(index, newValue, node * 2, nodeLeft, mid),
-            update(index, newValue, node * 2, mid + 1, nodeRight));
-    }
-
-    int update(int index, int newValue) {
-        return update(index, newValue, 1, 0, n - 1);
-    }
-
-};
-
-void traverse(int here, int d, vector<int>& trip) {
-    no2serial[here] = nextSerial;
-    serial2no[nextSerial] = here;
-    nextSerial++;
-    depth[here] = d;
-    locInTrip[here] = trip.size();
-    trip.push_back(no2serial[here]);
-
-    for(int i = 0; i < adj[here].size(); i++) {
-        traverse(adj[here][i], d + 1, trip);
-        trip.push_back(no2serial[here]);
-    }
-}
-
-
-RMQ* prepareRMQ(int start = 0) {
-    nextSerial = 0;
-    vector<int> trip;
-    traverse(start, 0, trip);
-    return new RMQ(trip);
+    return true;
 }
 
 int main() {
+    int A, B, C;
+    cin >> N >> M;
+
+    adj.assign(N + 1, vector<pair<int, int>>());
+
+    for(int i = 0; i < M; i++) {
+        cin >> A >> B >> C;
+        adj[A].push_back({B, C});
+    }
+
+    if(bellmanFord(1)) {
+        
+        for(int i = 2; i <= N; i++) {
+            if(dist[i] == INF) cout << -1 << '\n';
+            else cout << dist[i] << '\n';
+        }
+
+    } else {
+        cout << -1;
+    }
+
 
     return 0;
 }

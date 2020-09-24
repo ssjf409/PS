@@ -32,10 +32,10 @@ int main() {
         } else if(c == target[0]) {
             if(target.size() != 1) {
                 s.push(c);
-                if(index != 0) {
-                    lastIndex.push(index);
-                    index = 0;
-                }
+                
+                lastIndex.push(index);
+                index = 0;
+                
                 index++;
             }
         } else {
