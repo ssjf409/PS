@@ -1,2 +1,1 @@
-
-	json.dumps(info, f)
+data

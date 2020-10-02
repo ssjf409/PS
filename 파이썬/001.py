@@ -4,7 +4,11 @@ URL = "https://api.androidhive.info/contacts/"
 
 data = requests.get(URL).json()
 
-print(data["contacts"][0]["id"])
+a = [1] * 6
+b = []
+
+print(a)
+print(b)
 
 # print(type(data))
 # print(data)
