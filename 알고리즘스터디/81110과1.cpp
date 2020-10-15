@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 
 using namespace std;
 
 int T, N;
-vector<vector<int>> cache;
+map<int, vector<string>> cache;
 
 
 string getNum(string val, int depth) {
@@ -30,8 +31,10 @@ int main() {
     cin >> T;
     while(T--) {
         cin >> N;
-        cache.assign(N + 1, vector<int>(N + 1, -1));
-
+        if(cache.find(N) == cache.end()) {
+            cache[N] = vector<string>(N);
+        }
+        
         cout << getNum("1", 1);
     }
 
