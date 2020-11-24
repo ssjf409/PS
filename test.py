@@ -1,11 +1,1 @@
-
-symbols = "{"
-for i in range(101):
-    a = input()
-    symbols += '"' + a + '", '
-
-a = input()
-symbols += '"' + a + '"}'
-
-
-print(symbols)
+A=int(input()) B=int(input()) X=A+B print("X = ",X)
